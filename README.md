@@ -3,6 +3,9 @@
 Solana (Anchor 0.30.1) escrow for content bounties. Sponsors lock USDC in a vault PDA, creators submit links,
 the sponsor approves (paying from the vault in the same tx) or rejects, and can reclaim unspent funds after the deadline.
 
+## Demo & pitch
+A 2-minute demo script, hackathon submission description, and 5-slide pitch outline live in [`docs/DEMO_AND_PITCH.md`](docs/DEMO_AND_PITCH.md).
+
 ## Toolchain (pinned, known-good)
 - Solana/Agave CLI 1.18.26 (platform-tools v1.41), Anchor CLI 0.30.1, Node 20, yarn 1.22.22
 - Rust: `nightly-2024-06-01` is used for the IDL build (set via `RUSTUP_TOOLCHAIN`, see `scripts/env.sh`)
