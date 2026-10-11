@@ -8,6 +8,7 @@ import { getProgram } from "../src/lib/program";
 import {
   bountyState, fetchBounties, fetchBounty, fetchPayments, fetchSubmissions, fetchVaultBalance,
   findPayoutSignature, slotsLeft, submissionState,
+  computeCreatorStats, computeLeaderboard, computePlatformStats, fetchAllSubmissions, fetchSubmissionsByCreator,
 } from "../src/lib/data";
 import { formatUnits, parseUnits } from "../src/lib/format";
 import { friendlyError } from "../src/lib/errors";
@@ -44,6 +45,22 @@ async function main() {
     assert(tx?.meta?.logMessages?.some((l) => l.includes("ApproveSubmission")), "sig is the approve tx");
   }
   assert(pays.every((p) => p.bounty));
+
+  // leaderboard / profile / platform stats
+  const allSubs = await fetchAllSubmissions(program);
+  const board = computeLeaderboard(allSubs);
+  const stats = computePlatformStats(bounties, allSubs, now);
+  console.log(`leaderboard: ${board.length} creators; paid=${formatUnits(stats.paid)} payouts=${stats.payouts} escrowed=${formatUnits(stats.escrowed)}`);
+  for (let i = 1; i < board.length; i++) assert(board[i - 1].earned.cmp(board[i].earned) >= 0, "leaderboard sorted by earned desc");
+  const sumEarned = board.reduce((a, c) => a + BigInt(c.earned.toString()), 0n);
+  assert.equal(sumEarned, BigInt(stats.paid.toString()), "sum of leaderboard earnings == total paid (reward*paid_count)");
+  assert.equal(board.reduce((a, c) => a + c.approved, 0), stats.payouts);
+  assert.equal(computeCreatorStats(allSubs).length, stats.creators);
+  for (const c of board) {
+    const mine = await fetchSubmissionsByCreator(program, c.creator);
+    assert(mine.every((x) => x.creator.equals(c.creator)), "memcmp creator filter");
+    assert.equal(mine.length, c.approved + c.pending + c.rejected);
+  }
 
   assert.equal(parseUnits("12.5")?.toString(), "12500000");
   assert.equal(parseUnits("0.0000001"), null);

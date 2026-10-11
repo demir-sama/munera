@@ -25,8 +25,19 @@ A 2-minute demo script, hackathon submission description, and 5-slide pitch outl
 Next.js 14 (App Router) + TypeScript + Tailwind, light theme matching `assets/logo.png`. No backend or database: every page
 reads straight from the program's onchain accounts (`bounty`, `submission`, vault token accounts) via `@coral-xyz/anchor`.
 
-Routes: `/` bounty board · `/create` sponsor form · `/bounty/[address]` details, submit, approve/reject, reclaim · `/payments` payout ledger
-(Approved submissions + payout tx found with `getSignaturesForAddress` on the Submission PDA; `?bounty=<address>` filters).
+**Links:** [Live site](https://munera-opal.vercel.app) · [Docs](https://munera-opal.vercel.app/docs) · [X @munera_xyz](https://x.com/munera_xyz?s=11) · [GitHub](https://github.com/demir-sama/munera)
+
+### Features
+- **Bounty board** (`/`): search by title, status filter (All/Open/Filled/Expired/Closed) and sort (Newest, Highest reward, Ending soon, Most slots left), persisted in the URL (`?q=&status=&sort=`). Landing sections: About, Features, How it works, FAQ, CTA.
+- **Create** (`/create`), **Bounty page** (`/bounty/[address]`: submit, approve/reject, reclaim, **Share on X** + **Copy link**), **Payments** (`/payments`: payout ledger with Explorer links; `?bounty=<address>` filters).
+- **Leaderboard** (`/leaderboard`): creators ranked by USDC earned (approved clips, bounties won, copyable wallet, profile link) plus platform stats.
+- **Creator profile** (`/creator/[address]`): total earned, approved/pending/rejected counts, submissions with payout Explorer links.
+- **Dashboard** (`/dashboard`, wallet required): *My bounties* (vault balance, slots left, pending reviews, reclaim eligibility) and *My submissions*.
+- **Docs** (`/docs`, `/docs/[slug]`): 13 pages (quickstart, concepts, guides, payments & verification, smart contract reference, security model, architecture, devnet addresses, roadmap, FAQ). Content is a typed data file, `app/src/lib/docs.ts` (no MDX), so keep it in sync with `programs/munera/src/lib.rs`.
+- **Social/SEO:** Open Graph + Twitter `summary_large_image` metadata site-wide (`app/public/og.png`) and per-bounty `generateMetadata` (read from chain on the server, static fallback).
+- **Mobile/Android:** responsive navbar with drawer (wallet inside), no horizontal overflow, 44px touch targets, 16px inputs, normalised `datetime-local`, tables become stacked cards, `viewport-fit=cover` + safe-area insets, `100dvh`, reduced-motion support, toasts at the top on phones, and an "Open in Phantom / Solflare" in-app-browser help note (mobile Chrome has no wallet extensions).
+
+All data comes from onchain accounts; the leaderboard, profiles and dashboard are computed client-side (`src/lib/data.ts`).
 
 ### Setup
     cd app
@@ -41,6 +52,7 @@ Routes: `/` bounty board · `/create` sponsor form · `/bounty/[address]` detail
 | `NEXT_PUBLIC_PROGRAM_ID` | `48KEXpcdXgpeqTaZW2whYrWz823yewZxAr3x4cYh4S3W` | Deployed Munera program |
 | `NEXT_PUBLIC_USDC_MINT` | _(unset; devnet value in `.env.example`)_ | Test USDC mint from `yarn create-mint`. Required to create bounties; the Create page shows a notice when unset |
 | `NEXT_PUBLIC_CLUSTER` | `devnet` | Only affects Explorer links (`devnet`, `mainnet-beta`, or `localnet` for a custom-URL cluster) |
+| `NEXT_PUBLIC_SITE_URL` | `https://munera-opal.vercel.app` | Public site URL used for share links and Open Graph metadata |
 
 Wallets: Phantom and Solflare (any wallet-standard wallet is also detected). Code map: `src/lib/program.ts` (Program builder,
 read-only provider when disconnected), `src/lib/pda.ts` (seeds from `lib.rs`), `src/lib/data.ts` (account reads), `src/lib/errors.ts`
@@ -60,6 +72,7 @@ read-only provider when disconnected), `src/lib/pda.ts` (seeds from `lib.rs`), `
     pnpm verify:data    # runs the frontend's data helpers against the validator and asserts invariants
     NEXT_PUBLIC_RPC_URL=http://127.0.0.1:8899 NEXT_PUBLIC_CLUSTER=localnet NEXT_PUBLIC_USDC_MINT=<mint> pnpm build
     NEXT_PUBLIC_RPC_URL=... pnpm exec next start -p 3100 &
+    pnpm tsx scripts/mobile.ts   # Android-emulation audit: overflow check on every route at 360x640/360x800/390x844/412x915 + mobile-*.png screenshots
     pnpm e2e            # headless Chrome + injected fake Phantom: create -> submit -> approve -> reclaim; writes ../screenshots/*.png
 `e2e` needs Google Chrome at `/usr/bin/google-chrome` (edit `scripts/e2e.ts` otherwise).
 
@@ -72,7 +85,7 @@ read-only provider when disconnected), `src/lib/pda.ts` (seeds from `lib.rs`), `
 ### Live deployment
 Source: https://github.com/demir-sama/munera (branch `main`).
 Production URL: **https://munera-opal.vercel.app** (Vercel project `munera`, team `sama-5806`, deployment protection off, devnet env vars set).
-The deployment was created from local files (no Git remote is linked), so redeploys are manual until a GitHub repo is connected.
+Pushing to `main` auto-deploys through the Vercel Git integration (root directory `app`).
 
 ### Devnet deployment
 | Item | Value |

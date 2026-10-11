@@ -167,6 +167,48 @@ async function main() {
   await shot(page, "bounty-closed");
   await ctx.close();
 
+  // ---- 5b. New pages: filters, leaderboard, creator profile, dashboard, share ----
+  ctx = await newCtx(browser, sponsor);
+  page = await ctx.newPage(); watch(page, "pages");
+  await page.goto(`${APP}/?q=thread&sort=reward`, { waitUntil: "networkidle" });
+  await page.waitForSelector("text=Bounty board");
+  await page.waitForTimeout(1500);
+  const filteredCards = await page.$$eval("h3 a[href^='/bounty/']", (as) => as.length);
+  log("home filtered cards (q=thread)", filteredCards);
+  if (filteredCards < 1) throw new Error("search/filter returned nothing");
+  await page.fill('input[type="search"]', "zzzz-nothing");
+  await page.waitForSelector("text=No bounties match", { timeout: 10000 });
+  if (!page.url().includes("q=zzzz-nothing")) throw new Error("search not persisted in URL");
+  log("search persisted in URL:", new URL(page.url()).search);
+  const shareHref = await page.goto(`${APP}/bounty/${seed.bounties.b1}`, { waitUntil: "networkidle" }).then(() => page.getAttribute("a:has-text('Share on X')", "href"));
+  log("share href", shareHref);
+  if (!shareHref || !shareHref.startsWith("https://twitter.com/intent/tweet?text=") || !shareHref.includes("%40munera_xyz")) throw new Error("bad share url");
+  const og = await page.getAttribute('meta[property="og:image"]', "content");
+  const tw = await page.getAttribute('meta[name="twitter:card"]', "content");
+  log("og:image", og, "twitter:card", tw);
+  if (tw !== "summary_large_image") throw new Error("twitter card meta missing");
+  await page.goto(`${APP}/leaderboard`, { waitUntil: "networkidle" });
+  await page.waitForSelector("a:has-text('Profile')");
+  await shot(page, "leaderboard");
+  await page.click("a:has-text('Profile')");
+  await page.waitForSelector("text=Creator profile");
+  await page.waitForSelector("text=Total earned");
+  await shot(page, "creator-profile");
+  await page.goto(`${APP}/dashboard`, { waitUntil: "networkidle" });
+  await page.waitForSelector("text=My bounties");
+  await page.waitForSelector("a:has-text('Open')", { timeout: 30000 });
+  await shot(page, "dashboard-bounties");
+  await page.click("[role=tab]:has-text('My submissions')");
+  await page.waitForTimeout(1500);
+  await shot(page, "dashboard-submissions");
+  await ctx.close();
+  ctx = await newCtx(browser);
+  page = await ctx.newPage(); watch(page, "dash-anon");
+  await page.goto(`${APP}/dashboard`, { waitUntil: "networkidle" });
+  await page.waitForSelector("text=Connect your wallet");
+  await shot(page, "dashboard-connect");
+  await ctx.close();
+
   // ---- 6. Wallet without USDC ----
   ctx = await newCtx(browser, Keypair.generate());
   page = await ctx.newPage(); watch(page, "nousdc");
