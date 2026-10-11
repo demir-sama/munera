@@ -10,6 +10,8 @@ import { WalletButton } from "./WalletButton";
 import { ShareButtons } from "./ShareButtons";
 import { MobileWalletHelp } from "./MobileWalletHelp";
 import { AddressChip } from "./CopyButton";
+import { CreatorIdentity } from "./CreatorIdentity";
+import { ProfileNudge } from "./ProfileNudge";
 import { useToast } from "./Toast";
 import { useProgram } from "@/hooks/useProgram";
 import { useAsync } from "@/hooks/useAsync";
@@ -352,6 +354,7 @@ function SubmitSection({
             setTouched(false);
           }}
         >
+          <ProfileNudge />
           <label className="label" htmlFor="link">Link</label>
           <div className="flex flex-col gap-3 sm:flex-row">
             <input
@@ -419,9 +422,7 @@ function SubmissionRow({
       <div className="min-w-0 space-y-1.5">
         <div className="flex flex-wrap items-center gap-2.5">
           <SubmissionBadge state={st} />
-          <Link href={`/creator/${s.creator.toBase58()}`} className="font-mono text-sm font-semibold text-brand-600 hover:underline">
-            {shortAddr(s.creator)}
-          </Link>
+          <CreatorIdentity address={s.creator.toBase58()} />
           {isMine && <span className="rounded-full bg-brand-50 px-2 py-0.5 text-xs font-semibold text-brand-700">You</span>}
         </div>
         {safeHref ? (

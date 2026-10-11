@@ -3,13 +3,12 @@
 import Link from "next/link";
 import { useMemo } from "react";
 import { EmptyState, Notice, PageHeader, Stat } from "./ui";
-import { AddressChip } from "./CopyButton";
+import { CreatorIdentity } from "./CreatorIdentity";
 import { useProgram } from "@/hooks/useProgram";
 import { useAsync } from "@/hooks/useAsync";
 import { useNow } from "@/hooks/useNow";
 import { computeLeaderboard, computePlatformStats, fetchLeaderboardData } from "@/lib/data";
-import { formatUnits, shortAddr } from "@/lib/format";
-import { explorerAddress } from "@/lib/explorer";
+import { formatUnits } from "@/lib/format";
 import { TOKEN_SYMBOL } from "@/lib/config";
 
 const rankStyle = [
@@ -96,16 +95,14 @@ export function LeaderboardView() {
                   key={addr}
                   className={`grid gap-3 px-4 py-4 sm:px-6 md:grid-cols-[56px_1.4fr_1fr_1fr_1fr_auto] md:items-center md:gap-4 ${rank === 1 ? "bg-brand-50/40" : ""}`}
                 >
-                  <div className="flex items-center justify-between gap-3 md:contents">
-                    <div className="flex items-center gap-3 md:contents">
-                      <RankBadge rank={rank} />
-                      <AddressChip address={addr} short={shortAddr(c.creator)} href={explorerAddress(addr)} />
-                    </div>
-                    <p className="text-lg font-bold text-brand-700 md:order-none md:text-right">
+                  <div className="flex min-w-0 items-start gap-3 md:contents">
+                    <RankBadge rank={rank} />
+                    <CreatorIdentity address={addr} className="flex-1" />
+                  </div>
+                  <div className="flex flex-wrap items-baseline gap-x-5 gap-y-1 text-sm text-ink-soft md:contents">
+                    <p className="text-lg font-bold text-brand-700 md:text-right">
                       {formatUnits(c.earned)} <span className="text-xs font-semibold">{TOKEN_SYMBOL}</span>
                     </p>
-                  </div>
-                  <div className="flex gap-6 text-sm text-ink-soft md:contents">
                     <p className="md:text-right">
                       <span className="font-semibold text-ink">{c.approved}</span> <span className="md:hidden">approved clip{c.approved === 1 ? "" : "s"}</span>
                     </p>

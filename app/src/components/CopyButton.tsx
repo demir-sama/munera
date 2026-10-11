@@ -22,7 +22,7 @@ export async function copyText(text: string) {
 }
 
 /** Icon-only copy button (44px touch target) */
-export function CopyButton({ text, label = "Copy", className = "" }: { text: string; label?: string; className?: string }) {
+export function CopyButton({ text, label = "Copy", className = "", icon }: { text: string; label?: string; className?: string; icon?: React.ReactNode }) {
   const [done, setDone] = useState(false);
   return (
     <button
@@ -39,7 +39,7 @@ export function CopyButton({ text, label = "Copy", className = "" }: { text: str
       }}
       className={`inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-ink-muted sm:h-9 sm:w-9 transition hover:bg-brand-50 hover:text-brand-700 active:bg-brand-100 ${className}`}
     >
-      {done ? <CheckIcon className="h-4 w-4 text-brand-600" /> : <CopyIcon />}
+      {done ? <CheckIcon className="h-4 w-4 text-brand-600" /> : icon ?? <CopyIcon />}
     </button>
   );
 }

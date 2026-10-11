@@ -188,9 +188,9 @@ async function main() {
   log("og:image", og, "twitter:card", tw);
   if (tw !== "summary_large_image") throw new Error("twitter card meta missing");
   await page.goto(`${APP}/leaderboard`, { waitUntil: "networkidle" });
-  await page.waitForSelector("a:has-text('Profile')");
+  await page.waitForSelector("ol a:has-text('Profile')");
   await shot(page, "leaderboard");
-  await page.click("a:has-text('Profile')");
+  await page.click("ol a:has-text('Profile')");
   await page.waitForSelector("text=Creator profile");
   await page.waitForSelector("text=Total earned");
   await shot(page, "creator-profile");
@@ -208,6 +208,101 @@ async function main() {
   await page.waitForSelector("text=Connect your wallet");
   await shot(page, "dashboard-connect");
   await ctx.close();
+
+  // ---- 5c. Creator profiles (socials via onchain memo) ----
+  {
+    // find which seeded creator is on the leaderboard
+    const actx = await newCtx(browser);
+    const ap = await actx.newPage(); watch(ap, "lb-anon");
+    await ap.goto(`${APP}/leaderboard`, { waitUntil: "networkidle" });
+    await ap.waitForSelector("ol a:has-text('Profile')");
+    const lbAddr = ((await ap.getAttribute("ol a:has-text('Profile')", "href")) ?? "").split("/").pop()!;
+    await actx.close();
+    const kp = creators.find((c) => c.publicKey.toBase58() === lbAddr) ?? creators[0];
+    const addr = kp.publicKey.toBase58();
+    log("profile test creator", addr.slice(0, 6));
+
+    ctx = await newCtx(browser, kp);
+    page = await ctx.newPage(); watch(page, "profile");
+    await page.goto(`${APP}/profile`, { waitUntil: "networkidle" });
+    await page.waitForSelector("#p-name");
+    await page.waitForTimeout(2000);
+    await shot(page, "profile-empty");
+    await page.fill("#p-name", "Gladius");
+    await page.fill("#p-x", "https://twitter.com/munera_xyz?s=11");
+    await page.fill("#p-discord", "@Gladius_arena");
+    await page.fill("#p-youtube", "@MuneraDemo");
+    await page.fill("#p-github", "demir-sama");
+    await page.fill("#p-website", "example.com");
+    await page.fill("#p-instagram", "not a handle!");
+    await page.click("button:has-text('Save onchain')");
+    if (!(await page.$("text=Instagram handles are")) ) throw new Error("inline validation missing");
+    await shot(page, "profile-validation");
+    await page.fill("#p-instagram", "");
+    await page.click("button:has-text('Save onchain')");
+    await page.waitForSelector("text=Profile saved onchain", { timeout: 40000 });
+    log("profile saved via UI");
+    await shot(page, "profile-saved");
+    // normalisation went onchain
+    await page.goto(`${APP}/creator/${addr}`, { waitUntil: "networkidle" });
+    await page.waitForSelector("h1:has-text('Gladius')", { timeout: 30000 });
+    const hrefs = await page.$$eval("a[href^='https://x.com/'], a[href^='https://youtube.com/'], a[href^='https://github.com/'], a[href^='https://example.com']", (as) => as.map((a) => `${(a as HTMLAnchorElement).href}|${a.getAttribute("rel")}|${a.getAttribute("target")}`));
+    log("creator links", hrefs.join("  "));
+    if (!hrefs.some((h) => h.startsWith("https://x.com/munera_xyz|noopener noreferrer nofollow|_blank"))) throw new Error("X link missing / wrong rel");
+    if (!hrefs.some((h) => h.startsWith("https://youtube.com/@MuneraDemo"))) throw new Error("youtube link wrong");
+    await page.waitForSelector("text=Self-declared");
+    await page.waitForSelector("text=View onchain record");
+    await page.waitForSelector("text=Discord: gladius_arena");
+    await shot(page, "profile-creator-page");
+    // leaderboard + submissions show name
+    await page.goto(`${APP}/leaderboard`, { waitUntil: "networkidle" });
+    await page.waitForSelector("a:has-text('Gladius')", { timeout: 30000 });
+    await shot(page, "profile-leaderboard");
+    let seen = false;
+    for (const b of [seed.bounties.b1, seed.bounties.b3]) {
+      await page.goto(`${APP}/bounty/${b}`, { waitUntil: "networkidle" });
+      await page.waitForTimeout(2500);
+      if (await page.$("a:has-text('Gladius')")) { seen = true; await shot(page, "profile-bounty-submissions"); break; }
+    }
+    log("name shown in bounty submissions:", seen);
+    // mobile views (360 / 412): overflow + screenshots
+    for (const w of [360, 412]) {
+      await page.setViewportSize({ width: w, height: 800 });
+      for (const [nm, url] of [["editor", `${APP}/profile`], ["creator", `${APP}/creator/${addr}`], ["leaderboard", `${APP}/leaderboard`], ["bounty", `${APP}/bounty/${seed.bounties.b1}`]] as const) {
+        await page.goto(url, { waitUntil: "networkidle" });
+        await page.waitForTimeout(2500);
+        const over = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+        log(`mobile ${w} ${nm} overflow px:`, over);
+        if (over > 0) throw new Error(`horizontal overflow on ${nm} @${w}`);
+        await shot(page, `profile-mobile-${nm}-${w}`);
+      }
+    }
+    await ctx.close();
+
+    // wallet with no profile sees the nudge on an open bounty; removal path
+    ctx = await newCtx(browser, Keypair.generate());
+    page = await ctx.newPage(); watch(page, "nudge");
+    await page.goto(`${APP}/bounty/${seed.bounties.b1}`, { waitUntil: "networkidle" });
+    await page.waitForTimeout(3000);
+    const nudge = await page.$("text=Add your socials so sponsors can see who you are");
+    log("nudge visible for wallet without profile:", !!nudge);
+    if (nudge) await shot(page, "profile-nudge");
+    await ctx.close();
+
+    // remove all links (empty profile) hides links
+    ctx = await newCtx(browser, kp);
+    page = await ctx.newPage(); watch(page, "remove");
+    await page.goto(`${APP}/profile`, { waitUntil: "networkidle" });
+    await page.waitForFunction(() => (document.querySelector("#p-name") as HTMLInputElement)?.value === "Gladius", null, { timeout: 30000 });
+    await page.click("button:has-text('Remove all links')");
+    await page.click("button:has-text('Confirm remove')");
+    await page.waitForSelector("text=Links removed", { timeout: 40000 });
+    await page.goto(`${APP}/creator/${addr}`, { waitUntil: "networkidle" });
+    await page.waitForSelector("text=No social links published", { timeout: 30000 });
+    log("remove all links OK");
+    // republish a final profile for later screenshots
+    await ctx.close();
+  }
 
   // ---- 6. Wallet without USDC ----
   ctx = await newCtx(browser, Keypair.generate());

@@ -39,6 +39,11 @@ export function DashboardView() {
         eyebrow="Your arena"
         title="Dashboard"
         subtitle="Manage the bounties you sponsor and track the submissions you've entered."
+        action={
+          <Link href="/profile" className="btn-outline btn-sm self-start">
+            Edit profile &amp; socials
+          </Link>
+        }
       />
       {!publicKey ? (
         <div className="card flex flex-col items-center gap-4 px-5 py-12 text-center sm:px-6">

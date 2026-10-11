@@ -335,6 +335,13 @@ export const DOCS: DocPage[] = [
         ],
       },
       {
+        id: "profile",
+        title: "Add your socials",
+        blocks: [
+          { t: "p", text: "Optionally link your X, Discord, Instagram, TikTok, YouTube, Telegram, GitHub or website to your wallet on the [Profile](/profile) page so sponsors can see who you are. See [Creator profiles](/docs/creator-profiles) for how it works." },
+        ],
+      },
+      {
         id: "why-not-paid",
         title: "Why wasn't I paid?",
         blocks: [
@@ -348,6 +355,79 @@ export const DOCS: DocPage[] = [
             ],
           },
         ],
+      },
+    ],
+  },
+
+  {
+    slug: "creator-profiles",
+    title: "Creator profiles",
+    summary: "Link your socials to your wallet with an onchain memo. Self-declared, public, no backend.",
+    sections: [
+      {
+        id: "what",
+        title: "What it is",
+        blocks: [
+          { t: "p", text: "A creator profile is a display name plus optional links to X, Discord, Instagram, TikTok, YouTube, Telegram, GitHub and a website. It is shown on your [creator page](/leaderboard), on the leaderboard and next to your submissions, so sponsors can see who they are reviewing." },
+          { t: "p", text: "Profiles are optional and never block creating a bounty, submitting or getting paid. Edit yours on the [Profile](/profile) page." },
+        ],
+      },
+      {
+        id: "how",
+        title: "How it works onchain",
+        blocks: [
+          { t: "p", text: "Munera has no database. When you save, your wallet signs one transaction containing a single **SPL Memo** instruction (Memo program `MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr`, v2). Your wallet is passed to the memo instruction as a signer, so the Memo program itself verifies your signature and the record is attributable to you. The Munera program is not involved." },
+          {
+            t: "code",
+            lang: "json",
+            code: `{"app":"munera","v":1,"t":"profile","name":"Gladius","socials":{"x":"munera_xyz","discord":"gladius","website":"https://example.com"}}`,
+          },
+          { t: "p", text: "Memos are capped at 500 bytes by the editor. Allowed keys are `x`, `discord`, `instagram`, `tiktok`, `youtube`, `telegram`, `github` and `website`." },
+        ],
+      },
+      {
+        id: "reading",
+        title: "How profiles are read",
+        blocks: [
+          {
+            t: "ol",
+            items: [
+              "The site lists recent signatures of the wallet (`getSignaturesForAddress`), which include each transaction's memo text.",
+              "It picks the **most recent successful** memo with `app = munera`, `t = profile`, `v = 1`.",
+              "It downloads that transaction and checks that the memo instruction lists the wallet as a **signer account**, so nobody can attach a profile to your address by merely sending you a transaction or signing a memo of their own.",
+              "Everything is validated strictly: only allowed keys, handle patterns, length limits and `https://` URLs. Anything else is dropped. Values are always rendered as escaped text, never as HTML.",
+            ],
+          },
+          { t: "p", text: "Results are cached in your browser for a few minutes to be kind to public RPC endpoints, so changes can take a moment to appear elsewhere. Only the latest 200 signatures of a wallet are searched; a very busy wallet may lose an old profile from view, and republishing fixes that." },
+        ],
+      },
+      {
+        id: "caveat",
+        title: "Self-declared, not verified",
+        blocks: [
+          { t: "callout", tone: "warn", text: "Links are self-declared and stored publicly onchain. **Munera doesn't verify that you own these accounts.** Treat them as a claim, not proof." },
+          { t: "p", text: "**Verification tip:** also pin your wallet address in the bio of the accounts you link. Anyone can then check that both sides agree, with no extra tooling." },
+        ],
+      },
+      {
+        id: "privacy",
+        title: "Privacy and permanence",
+        blocks: [
+          {
+            t: "ul",
+            items: [
+              "Anything you publish is **public forever**. Do not include private information.",
+              "Updating or removing links publishes a **new** memo; the latest one wins. Earlier memos remain in the blockchain's history and are visible on Explorer.",
+              "**Remove all links** publishes an empty profile, which hides your links on Munera but cannot erase history.",
+              "Your profile is tied to your wallet address, which is already public. Linking socials connects the two publicly.",
+            ],
+          },
+        ],
+      },
+      {
+        id: "fees",
+        title: "Fees",
+        blocks: [{ t: "p", text: "A memo transaction costs only the network fee, about 0.000005 SOL. No rent is paid and nothing is created." }] ,
       },
     ],
   },
@@ -667,6 +747,7 @@ const submission = PublicKey.findProgramAddressSync(
               "The leaderboard, creator profiles, dashboard and payment history are **computed in the browser** from those accounts.",
               "Payout transactions are found with `getSignaturesForAddress` on the submission account.",
               "Vault balances come from `getTokenAccountBalance`.",
+              "Creator profiles are SPL Memo records signed by the creator wallet, read with `getSignaturesForAddress` and cached in the browser (see [Creator profiles](/docs/creator-profiles)).",
             ],
           },
         ],
@@ -817,6 +898,11 @@ NEXT_PUBLIC_SITE_URL=https://munera-opal.vercel.app`,
         id: "late",
         title: "Can the sponsor approve after the deadline?",
         blocks: [{ t: "p", text: "Yes, until they reclaim. Reclaiming closes the bounty, after which nothing can be paid." }],
+      },
+      {
+        id: "profiles",
+        title: "Can creators add their socials?",
+        blocks: [{ t: "p", text: "Yes, on the [Profile](/profile) page. Links are self-declared and stored onchain via a memo; see [Creator profiles](/docs/creator-profiles)." }],
       },
       {
         id: "mobile",

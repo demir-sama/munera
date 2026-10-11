@@ -13,6 +13,7 @@ const cols = [
       { href: "/create", label: "Create a bounty" },
       { href: "/dashboard", label: "Dashboard" },
       { href: "/leaderboard", label: "Leaderboard" },
+      { href: "/profile", label: "My profile" },
       { href: "/payments", label: "Payments" },
     ],
   },

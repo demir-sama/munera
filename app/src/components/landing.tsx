@@ -58,6 +58,7 @@ const features = [
   ["🧾", "Onchain payment history", "Every payout is listed with its Solana Explorer transaction link. Nothing to trust, everything to verify."],
   ["∅", "No backend", "No servers, no database. The site reads Solana accounts directly through the program's IDL."],
   ["🏆", "Creator leaderboard", "Creators are ranked by USDC earned, with public profiles of every submission and payout."],
+  ["🪪", "Creator profiles & socials", "Creators link X, Discord, YouTube and more to their wallet with a tiny onchain memo, so sponsors see who entered. Self-declared and public."],
   ["👛", "Phantom & Solflare", "Connect with the wallets you already use, on desktop or inside their mobile in-app browsers."],
   ["🛡", "Checked & tested", "Sponsor-only actions, no double payment, max-winner caps and checked math, covered by 22 program tests."],
 ] as const;
@@ -69,7 +70,7 @@ export function FeaturesGrid() {
       <h2 id="features" className="sr-only">
         Features
       </h2>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {features.map(([icon, t, d]) => (
           <div key={t} className="card p-5 transition hover:border-brand-300 hover:shadow-lift">
             <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-lg text-brand-700" aria-hidden>
@@ -133,6 +134,12 @@ const faqs: [string, React.ReactNode][] = [
   [
     "Who can approve?",
     "Only the sponsor wallet that created the bounty. The program rejects approvals, rejections and reclaims from any other wallet.",
+  ],
+  [
+    "Can creators add their socials?",
+    <>
+      Yes. Creators can link X, Discord, YouTube and more on the <Link href="/profile" className="font-semibold text-brand-600 hover:underline">Profile</Link> page. It&apos;s a tiny onchain memo signed by your wallet. Links are self-declared, not verified.
+    </>,
   ],
   [
     "How do I get test USDC?",

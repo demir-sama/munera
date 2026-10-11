@@ -5,6 +5,9 @@ import { useMemo } from "react";
 import { PublicKey } from "@solana/web3.js";
 import { BN } from "@coral-xyz/anchor";
 import { CopyButton } from "./CopyButton";
+import { SelfDeclaredBadge, SocialList } from "./SocialLinks";
+import { useProfile } from "@/hooks/useProfile";
+import { isEmptyProfile } from "@/lib/profile";
 import { EmptyState, ExtLink, Notice, Stat, SubmissionBadge } from "./ui";
 import { useProgram } from "@/hooks/useProgram";
 import { useAsync } from "@/hooks/useAsync";
@@ -68,6 +71,7 @@ function Inner({ creator }: { creator: PublicKey }) {
   }, [data]);
 
   const addr = creator.toBase58();
+  const { profile } = useProfile(addr);
   return (
     <div className="space-y-8">
       <Link href="/leaderboard" className="inline-flex min-h-[44px] items-center gap-1 text-sm font-semibold text-ink-soft hover:text-brand-600">
@@ -77,14 +81,37 @@ function Inner({ creator }: { creator: PublicKey }) {
       <section className="card overflow-hidden">
         <div className="border-b border-neutral-100 bg-gradient-to-br from-brand-50 to-white p-5 sm:p-8">
           <p className="eyebrow mb-2">Creator profile</p>
-          <h1 className="break-all font-display text-xl font-bold tracking-wide sm:text-3xl">{shortAddr(creator, 6)}</h1>
+          <h1 className="break-words font-display text-2xl font-bold tracking-wide sm:text-3xl">
+            {profile?.name ?? shortAddr(creator, 6)}
+          </h1>
           <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-ink-muted">
-            <span className="break-all font-mono text-xs">{addr}</span>
+            <span className="min-w-0 break-all font-mono text-xs">{addr}</span>
             <CopyButton text={addr} label="Copy address" />
             <ExtLink href={explorerAddress(addr)} className="text-sm">
               Explorer ↗
             </ExtLink>
           </div>
+          {profile === undefined ? (
+            <div className="mt-4 flex gap-2" aria-hidden>
+              <span className="h-11 w-28 animate-pulse rounded-xl bg-neutral-100" />
+              <span className="h-11 w-28 animate-pulse rounded-xl bg-neutral-100" />
+            </div>
+          ) : !isEmptyProfile(profile) && profile ? (
+            <div className="mt-4 space-y-2.5">
+              <SocialList profile={profile} />
+              <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-ink-muted">
+                <SelfDeclaredBadge />
+                <span>Stored publicly onchain; Munera doesn&apos;t verify these accounts.</span>
+                {profile.signature && (
+                  <ExtLink href={explorerTx(profile.signature)} className="py-2 text-xs">
+                    View onchain record ↗
+                  </ExtLink>
+                )}
+              </p>
+            </div>
+          ) : (
+            <p className="mt-3 text-sm text-ink-muted">No social links published by this wallet.</p>
+          )}
         </div>
         <div className="grid grid-cols-2 gap-3 p-4 sm:gap-4 sm:p-8 lg:grid-cols-4">
           <Stat label="Total earned" value={`${formatUnits(stats.earned)} ${TOKEN_SYMBOL}`} />

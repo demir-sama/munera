@@ -18,6 +18,7 @@ const ROUTES: [string, string][] = [
   ["dashboard", "/dashboard"],
   ["leaderboard", "/leaderboard"],
   ["payments", "/payments"],
+  ["profile", "/profile"],
   ["bounty", `/bounty/${BOUNTY}`],
   ["creator", `/creator/${CREATOR}`],
   ["docs", "/docs"],

@@ -15,6 +15,7 @@ const links = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/leaderboard", label: "Leaderboard" },
   { href: "/payments", label: "Payments" },
+  { href: "/profile", label: "Profile" },
   { href: "/docs", label: "Docs" },
 ];
 
@@ -44,7 +45,7 @@ export function Navbar() {
           <span className="font-display text-xl font-bold tracking-[0.18em] text-ink">MUNERA</span>
         </Link>
 
-        <nav className="hidden items-center gap-0.5 lg:flex" aria-label="Main">
+        <nav className="hidden items-center gap-0.5 xl:flex" aria-label="Main">
           {links.map((l) => (
             <Link
               key={l.href}
@@ -72,7 +73,7 @@ export function Navbar() {
             <WalletButton />
           </div>
           <button
-            className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-neutral-200 bg-white lg:hidden"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-neutral-200 bg-white xl:hidden"
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             aria-controls="mobile-drawer"
@@ -89,7 +90,7 @@ export function Navbar() {
       {open && (
         <div
           id="mobile-drawer"
-          className="fixed inset-x-0 bottom-0 top-16 z-50 overflow-y-auto overscroll-contain bg-white px-4 pb-safe pt-4 lg:hidden"
+          className="fixed inset-x-0 bottom-0 top-16 z-50 overflow-y-auto overscroll-contain bg-white px-4 pb-safe pt-4 xl:hidden"
           style={{ top: "calc(4rem + env(safe-area-inset-top))" }}
         >
           <nav className="flex flex-col gap-1" aria-label="Mobile">

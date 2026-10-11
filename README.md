@@ -33,7 +33,8 @@ reads straight from the program's onchain accounts (`bounty`, `submission`, vaul
 - **Leaderboard** (`/leaderboard`): creators ranked by USDC earned (approved clips, bounties won, copyable wallet, profile link) plus platform stats.
 - **Creator profile** (`/creator/[address]`): total earned, approved/pending/rejected counts, submissions with payout Explorer links.
 - **Dashboard** (`/dashboard`, wallet required): *My bounties* (vault balance, slots left, pending reviews, reclaim eligibility) and *My submissions*.
-- **Docs** (`/docs`, `/docs/[slug]`): 13 pages (quickstart, concepts, guides, payments & verification, smart contract reference, security model, architecture, devnet addresses, roadmap, FAQ). Content is a typed data file, `app/src/lib/docs.ts` (no MDX), so keep it in sync with `programs/munera/src/lib.rs`.
+- **Creator profiles** (`/profile`): creators link X, Discord, Instagram, TikTok, YouTube, Telegram, GitHub and a website to their wallet. Stored onchain as a signed **SPL Memo** (`MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr`, JSON `{"app":"munera","v":1,"t":"profile",...}`), read back with `getSignaturesForAddress` (latest signed memo wins, strict sanitisation, cached in memory + sessionStorage). Shown on `/creator/[address]`, the leaderboard and bounty submissions. Self-declared, not verified; no program change, no backend. Code: `app/src/lib/profile.ts`; check it with `pnpm tsx scripts/verify-profile.ts` (local validator). Docs: `/docs/creator-profiles`.
+- **Docs** (`/docs`, `/docs/[slug]`): 14 pages (quickstart, concepts, guides, payments & verification, smart contract reference, security model, architecture, devnet addresses, roadmap, FAQ). Content is a typed data file, `app/src/lib/docs.ts` (no MDX), so keep it in sync with `programs/munera/src/lib.rs`.
 - **Social/SEO:** Open Graph + Twitter `summary_large_image` metadata site-wide (`app/public/og.png`) and per-bounty `generateMetadata` (read from chain on the server, static fallback).
 - **Mobile/Android:** responsive navbar with drawer (wallet inside), no horizontal overflow, 44px touch targets, 16px inputs, normalised `datetime-local`, tables become stacked cards, `viewport-fit=cover` + safe-area insets, `100dvh`, reduced-motion support, toasts at the top on phones, and an "Open in Phantom / Solflare" in-app-browser help note (mobile Chrome has no wallet extensions).
 
@@ -69,6 +70,7 @@ read-only provider when disconnected), `src/lib/pda.ts` (seeds from `lib.rs`), `
       --bpf-program 48KEXpcdXgpeqTaZW2whYrWz823yewZxAr3x4cYh4S3W target/deploy/munera.so &
     cd app
     pnpm seed:local     # creates a test mint + sample bounties/submissions/payouts, writes /tmp/munera-seed.json
+    pnpm tsx scripts/verify-profile.ts   # creator-profile memo helper: latest wins, sanitisation, spoof/other-app rejection, cache
     pnpm verify:data    # runs the frontend's data helpers against the validator and asserts invariants
     NEXT_PUBLIC_RPC_URL=http://127.0.0.1:8899 NEXT_PUBLIC_CLUSTER=localnet NEXT_PUBLIC_USDC_MINT=<mint> pnpm build
     NEXT_PUBLIC_RPC_URL=... pnpm exec next start -p 3100 &

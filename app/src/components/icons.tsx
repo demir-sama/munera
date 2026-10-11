@@ -36,3 +36,65 @@ export function CheckIcon({ className = "h-4 w-4" }: { className?: string }) {
     </svg>
   );
 }
+
+const stroke = { fill: "none", stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round", strokeLinejoin: "round" } as const;
+export function InstagramIcon({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} {...stroke} aria-hidden>
+      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.3" cy="6.7" r="0.6" fill="currentColor" />
+    </svg>
+  );
+}
+export function TikTokIcon({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} {...stroke} aria-hidden>
+      <path d="M14 3v11.5a3.5 3.5 0 1 1-3.5-3.5" />
+      <path d="M14 3c.3 2.4 1.9 4.2 4.5 4.5" />
+    </svg>
+  );
+}
+export function YouTubeIcon({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} {...stroke} aria-hidden>
+      <rect x="2.5" y="5.5" width="19" height="13" rx="4" />
+      <path d="m10 9.5 5 2.5-5 2.5z" fill="currentColor" />
+    </svg>
+  );
+}
+export function TelegramIcon({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} {...stroke} aria-hidden>
+      <path d="M21.5 3.5 2.8 10.7c-.8.3-.8 1.4 0 1.7l4.6 1.6 1.8 5.6c.2.7 1.1.9 1.6.4l2.6-2.5 4.7 3.5c.6.4 1.4.1 1.6-.6l3-15.1c.2-.9-.7-1.5-1.2-1.2Z" />
+      <path d="m7.4 14 10.1-6.4" />
+    </svg>
+  );
+}
+export function DiscordIcon({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} {...stroke} aria-hidden>
+      <path d="M6.5 6.5c1.7-.9 3.5-1.3 5.5-1.3s3.8.4 5.5 1.3c1.7 2.6 2.6 5.3 2.7 8.5-1.3 1-2.8 1.7-4.4 2.1l-1-1.7M6.5 6.5C4.8 9.100 3.900 11.800 3.800 15c1.300 1 2.800 1.700 4.400 2.100l1-1.700" />
+      <path d="M8 15.200c2.600.9 5.400.9 8 0" />
+      <circle cx="9.200" cy="11.300" r="1" fill="currentColor" />
+      <circle cx="14.800" cy="11.300" r="1" fill="currentColor" />
+    </svg>
+  );
+}
+export function GlobeIcon({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} {...stroke} aria-hidden>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M3 12h18" />
+      <path d="M12 3c2.700 2.600 4 5.600 4 9s-1.300 6.400-4 9c-2.700-2.600-4-5.600-4-9s1.300-6.400 4-9Z" />
+    </svg>
+  );
+}
+export function UserIcon({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} {...stroke} aria-hidden>
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 21c0-4 3.600-7 8-7s8 3 8 7" />
+    </svg>
+  );
+}
