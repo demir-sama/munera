@@ -1,0 +1,51 @@
+MUNERA DEMO - VOICEOVER / CAPTION SCRIPT (~2:50, all lines are burned in as captions and narrated)
+Narration: Piper TTS (en_US-ryan-high), offline. Source of truth: app/scripts/demo/lines.json
+
+[INTRO (0:00)]
+  Munera. Enter the arena. Earn your reward.
+
+[PROBLEM]
+  Creators wait on DMs.
+  Projects can't prove they paid.
+  Spreadsheets, screenshots, promises. Nobody can verify who paid whom.
+  Munera replaces trust with escrow, and proof.
+
+[HOW IT WORKS]
+  How it works.
+  One: the sponsor locks the budget in an escrow vault.
+  Two: creators submit their links.
+  Three: the sponsor approves the best work.
+  Four: the creator is paid instantly, and anyone can verify it onchain.
+
+[LIVE DEMO 1 - Sponsor locks the budget]
+  Now, the real thing. Live, on Solana devnet.
+  A sponsor posts a bounty: five USDC for each of three winners.
+  Sponsor locks the full budget in an escrow vault.
+
+[LIVE DEMO 2 - Creators submit]
+  A creator finds the bounty on the board.
+  Creators submit a link. One entry each, recorded onchain.
+
+[LIVE DEMO 3 - Approve = instant payout]
+  The sponsor reviews the entry and approves it.
+  Approval pays the creator from the vault in the same transaction.
+
+[LIVE DEMO 4 - Verify onchain]
+  Every payout is public and verifiable.
+  Creators build a public, onchain track record.
+
+[FEATURES]
+  A live leaderboard ranks creators by what they've earned.
+  Profiles link self-declared socials, stored onchain.
+  Dashboards for sponsors and creators, built mobile first.
+  And complete documentation, from quickstart to contract reference.
+
+[SECURITY & TECH]
+  Built on an Anchor program, with a vault owned by a program-derived address.
+  Checked math. Sponsor-only actions. No double payment.
+  Twenty-two passing tests, and no backend: everything is read from the chain.
+
+[END CARD]
+  Munera. Enter the arena. Earn your reward.
+  After the deadline, sponsors reclaim any unspent funds.
+

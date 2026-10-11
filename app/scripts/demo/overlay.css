@@ -1,0 +1,20 @@
+@font-face{font-family:"InterV";src:url("assets/Inter.ttf");font-weight:100 900;font-style:normal}
+:root{--blue:#12378F;--tint:#E8EEFA;--black:#0A0A0A;--off:#F7F8FA;--gray:#5B6270}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;font-family:"InterV","Inter",sans-serif;color:var(--black);-webkit-font-smoothing:antialiased;background:transparent}
+#ov{position:absolute;left:0;top:0;width:1920px;height:1080px;pointer-events:none;z-index:1000}
+#cap{position:absolute;left:0;width:1920px;bottom:62px;display:flex;justify-content:center;opacity:0}
+#capin{display:flex;align-items:center;gap:22px;background:rgba(255,255,255,.98);border-radius:999px;padding:20px 46px 20px 28px;max-width:1560px;box-shadow:0 14px 44px rgba(10,10,10,.30),0 2px 8px rgba(10,10,10,.18);border:1.5px solid rgba(18,55,143,.14)}
+#capbar{width:10px;height:44px;border-radius:5px;background:var(--blue);flex:none}
+#captxt{font-weight:750;font-size:40px;letter-spacing:-0.015em;line-height:1.15;color:var(--black);white-space:nowrap}
+#ttl{position:absolute;left:44px;top:124px;width:330px;opacity:0;background:#fff;border-radius:22px;padding:20px 24px 22px;box-shadow:0 14px 40px rgba(10,10,10,.22),0 2px 6px rgba(10,10,10,.12);border:1.5px solid rgba(18,55,143,.14);overflow:hidden}
+#ttl::before{content:"";position:absolute;left:0;top:0;bottom:0;width:8px;background:var(--blue)}
+#ttlnum{font-weight:800;font-size:17px;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);margin-bottom:8px;padding-left:6px}
+#ttltxt{font-weight:800;font-size:30px;letter-spacing:-0.02em;line-height:1.14;padding-left:6px}
+#stat{position:absolute;right:44px;top:124px;width:330px;opacity:0;background:#fff;border-radius:22px;padding:20px 26px 22px;box-shadow:0 14px 40px rgba(10,10,10,.22),0 2px 6px rgba(10,10,10,.12);border:1.5px solid rgba(18,55,143,.14)}
+#statlab{font-weight:700;font-size:17px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray)}
+#statval{margin-top:8px;font-weight:800;font-size:62px;letter-spacing:-0.035em;line-height:1;font-variant-numeric:tabular-nums;color:var(--blue)}
+#statval small{font-size:24px;font-weight:700;color:var(--black);letter-spacing:0;margin-left:8px}
+#statsub{margin-top:10px;font-weight:550;font-size:19px;color:var(--gray)}
+#statbar{margin-top:14px;height:8px;border-radius:4px;background:var(--tint);overflow:hidden}
+#statbar i{display:block;height:100%;width:0;border-radius:4px;background:linear-gradient(90deg,#1B47B0,#12378F)}

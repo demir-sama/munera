@@ -1,0 +1,133 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="overlay.css">
+<style>
+body{background:#fff}
+#stage{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;background:#fff}
+.scene{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;display:none}
+.bg-off{background:var(--off)}.bg-white{background:#fff}
+.abs{position:absolute}.cx{left:0;width:1920px;text-align:center}
+.hex{position:absolute;left:-200px;top:-200px;width:2320px;height:1480px;-webkit-mask-image:radial-gradient(ellipse 62% 62% at 50% 50%,rgba(0,0,0,.45) 0%,#000 100%)}
+.shadow-card{box-shadow:0 1px 2px rgba(10,10,10,.04),0 14px 34px rgba(10,10,10,.07),0 36px 80px rgba(18,55,143,.08);background:#fff}
+.eyebrow{font-weight:700;font-size:26px;letter-spacing:.2em;text-transform:uppercase;color:var(--blue)}
+.h1{font-weight:800;font-size:128px;letter-spacing:-0.035em;line-height:1;white-space:nowrap}
+.card{position:absolute;border-radius:34px;background:#fff}
+.ctitle{font-weight:750;font-size:36px;letter-spacing:-0.02em;white-space:nowrap}
+.csub{font-size:25px;line-height:1.35;color:var(--gray);font-weight:450}
+.badge{width:54px;height:54px;border-radius:17px;background:var(--blue);color:#fff;font-weight:700;font-size:24px;display:flex;align-items:center;justify-content:center;flex:none}
+.panel{position:absolute;left:28px;top:28px;right:28px;height:230px;border-radius:24px;background:linear-gradient(160deg,#EEF3FC,#E3EBF9);overflow:hidden}
+.mono{font-family:ui-monospace,"DejaVu Sans Mono",monospace}
+.pill{position:absolute;border-radius:999px;background:#fff;box-shadow:0 8px 24px rgba(18,55,143,.14);display:flex;align-items:center;gap:12px;font-weight:700;font-size:26px;padding:14px 28px;white-space:nowrap}
+.win{position:absolute;border-radius:22px;background:#fff;overflow:hidden;box-shadow:0 2px 4px rgba(10,10,10,.05),0 24px 60px rgba(10,10,10,.14),0 50px 110px rgba(18,55,143,.12);border:1.5px solid #E6EAF2}
+.win .bar{height:44px;background:#F1F3F8;display:flex;align-items:center;gap:9px;padding-left:18px;border-bottom:1.5px solid #E6EAF2}
+.win .bar i{width:13px;height:13px;border-radius:50%;background:#D5DAE5;display:block}
+.win .bar span{margin-left:14px;font-size:16px;color:#7A8294;font-weight:550;background:#fff;border-radius:999px;padding:5px 18px;border:1px solid #E6EAF2}
+.win img{display:block;width:100%}
+.phone{position:absolute;border-radius:54px;background:#0A0A0A;padding:14px;box-shadow:0 30px 70px rgba(10,10,10,.28),0 6px 14px rgba(10,10,10,.18)}
+.phone .scr{border-radius:42px;overflow:hidden;background:#fff;position:relative;width:100%;height:100%}
+.phone .scr img{width:100%;display:block}
+.phone .notch{position:absolute;left:50%;top:10px;width:120px;height:26px;margin-left:-60px;border-radius:14px;background:#0A0A0A;z-index:3}
+.lab{position:absolute;display:flex;align-items:center;gap:14px;background:var(--blue);color:#fff;border-radius:16px;padding:14px 26px;font-weight:700;font-size:30px;letter-spacing:-0.01em;box-shadow:0 14px 34px rgba(18,55,143,.35);white-space:nowrap}
+.chip{position:absolute;border-radius:18px;background:#fff;box-shadow:0 12px 34px rgba(10,10,10,.16);padding:14px 22px;font-weight:700;font-size:26px;display:flex;align-items:center;gap:14px;white-space:nowrap;border:1.5px solid #E6EAF2}
+.dm{position:absolute;width:560px;border-radius:26px;background:#fff;padding:22px 26px;display:flex;gap:20px;align-items:center;box-shadow:0 1px 2px rgba(10,10,10,.04),0 14px 34px rgba(10,10,10,.08)}
+.av{width:60px;height:60px;border-radius:50%;background:#DDE3EF;flex:none}
+.bar-g{height:14px;border-radius:7px;background:#E3E7EF}
+.sheet{position:absolute;border-radius:26px;background:#fff;overflow:hidden;box-shadow:0 1px 2px rgba(10,10,10,.04),0 14px 34px rgba(10,10,10,.08)}
+.sheet .r{display:flex;height:64px;border-bottom:1.5px solid #EDF0F6;align-items:center;font-size:24px;font-weight:550;color:#444A58}
+.sheet .r div{padding:0 22px;border-right:1.5px solid #EDF0F6;height:100%;display:flex;align-items:center}
+.sheet .hd{background:#F1F4F9;font-weight:700;color:#8A91A3;font-size:20px;letter-spacing:.1em;text-transform:uppercase}
+.sec{position:absolute;border-radius:30px;background:#fff;padding:30px 40px;box-shadow:0 1px 2px rgba(10,10,10,.04),0 14px 34px rgba(10,10,10,.07),0 36px 80px rgba(18,55,143,.08);border:1.5px solid #EEF1F7}
+.sec .ic{width:70px;height:70px;border-radius:20px;background:var(--tint);display:flex;align-items:center;justify-content:center}
+.sec h3{font-weight:800;font-size:36px;letter-spacing:-0.025em;margin-top:18px}
+.sec p{font-size:23px;color:var(--gray);margin-top:8px;line-height:1.32;font-weight:450}
+.sec .tag{position:absolute;right:30px;top:30px;width:44px;height:44px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><defs>
+ <symbol id="logo" viewBox="449 413 1070 1192">
+  <g fill="#0A0A0A"><polygon points="970,423 459,720 459,1268 554,1210 554,793 970,549"/><polygon points="998,423 1509,720 1509,1268 1414,1210 1414,793 998,549"/><polygon points="463,1300 969,1595 969,1472 567,1239"/><polygon points="1505,1300 999,1595 999,1472 1401,1239"/><polygon points="741,985 984,1133 1227,985 1227,1154 984,1300 741,1154"/></g>
+  <polygon fill="#12378F" points="984,762 754,902 984,1040 1214,902"/>
+ </symbol>
+ <symbol id="chk" viewBox="0 0 34 34"><path d="M7 17.5 L14 24.5 L27 10" stroke="currentColor" stroke-width="4.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</defs></svg>
+<div id="stage">
+
+<!-- INTRO -->
+<div class="scene bg-white" id="s_intro">
+  <div class="hex" id="hex_intro"></div>
+  <div class="abs" id="i_shadow" style="left:760px;top:760px;width:400px;height:60px;border-radius:50%;background:radial-gradient(ellipse at center,rgba(10,10,10,.20),rgba(10,10,10,0) 70%);filter:blur(10px)"></div>
+  <svg class="abs" id="i_logo" width="330" height="368" style="left:795px;top:356px;transform-origin:50% 50%"><use href="#logo"/></svg>
+  <div class="abs cx eyebrow" id="i_eye" style="top:262px">Content bounties · Onchain escrow</div>
+  <div style="position:absolute;left:0;top:405px;width:1920px;height:150px;overflow:hidden"><div class="abs cx h1" id="i_l1" style="top:0">Enter the arena.</div></div>
+  <div style="position:absolute;left:0;top:545px;width:1920px;height:150px;overflow:hidden"><div class="abs cx h1" id="i_l2" style="top:0;color:var(--blue)">Earn your reward.</div></div>
+  <div class="abs" id="i_acc" style="left:750px;top:735px;width:420px;height:8px;border-radius:4px;background:var(--blue);transform-origin:0 50%"></div>
+</div>
+
+<!-- PROBLEM -->
+<div class="scene bg-off" id="s_prob">
+  <div class="hex" id="hex_prob"></div>
+  <div id="p_dms"></div>
+  <div class="sheet" id="p_sheet" style="left:1060px;top:250px;width:640px">
+    <div class="r hd"><div style="width:230px">Creator</div><div style="width:190px">Amount</div><div style="width:220px;border-right:0">Paid?</div></div>
+    <div class="r"><div style="width:230px">@clipper_01</div><div style="width:190px">$250</div><div style="width:220px;border-right:0" class="q">?</div></div>
+    <div class="r"><div style="width:230px">@lena.cuts</div><div style="width:190px">$250</div><div style="width:220px;border-right:0" class="q">maybe</div></div>
+    <div class="r"><div style="width:230px">@vid_ninja</div><div style="width:190px">$100</div><div style="width:220px;border-right:0" class="q">?</div></div>
+    <div class="r"><div style="width:230px">@reelz</div><div style="width:190px">$100</div><div style="width:220px;border-right:0" class="q">“sent it”</div></div>
+    <div class="r" style="border-bottom:0"><div style="width:230px">@nova_edit</div><div style="width:190px">$500</div><div style="width:220px;border-right:0" class="q">?</div></div>
+  </div>
+  <div class="card shadow-card" id="p_shot" style="left:760px;top:600px;width:420px;height:250px;padding:22px;border:1.5px solid #E6EAF2">
+    <div style="font-size:20px;font-weight:700;color:#8A91A3;letter-spacing:.06em">paid_final_FINAL(2).png</div>
+    <div style="margin-top:18px;display:flex;gap:14px"><div style="width:110px;height:140px;border-radius:14px;background:repeating-linear-gradient(45deg,#E8ECF4,#E8ECF4 10px,#F1F4F9 10px,#F1F4F9 20px)"></div><div style="flex:1"><div class="bar-g" style="width:90%"></div><div class="bar-g" style="width:70%;margin-top:14px"></div><div class="bar-g" style="width:80%;margin-top:14px"></div><div class="bar-g" style="width:55%;margin-top:14px"></div></div></div>
+  </div>
+  <div class="abs" id="p_stamp" style="left:1010px;top:760px;padding:16px 40px;border:8px solid var(--blue);border-radius:18px;font-weight:900;font-size:78px;letter-spacing:.06em;color:var(--blue);transform-origin:50% 50%;white-space:nowrap;background:rgba(255,255,255,.7)">NO PROOF</div>
+  <!-- solution -->
+  <div class="card shadow-card" id="p_vault" style="left:610px;top:290px;width:700px;height:420px;padding:48px 56px;border:1.5px solid #EEF1F7">
+    <div style="display:flex;align-items:center;gap:26px"><div style="width:96px;height:96px;border-radius:26px;background:var(--tint);display:flex;align-items:center;justify-content:center"><svg width="52" height="56" viewBox="0 0 56 60" fill="none"><rect x="6" y="26" width="44" height="30" rx="9" fill="#12378F"/><path d="M15 26v-8a13 13 0 0 1 26 0v8" stroke="#12378F" stroke-width="6" stroke-linecap="round"/><circle cx="28" cy="40" r="4.5" fill="#fff"/><rect x="26" y="41" width="4" height="9" rx="2" fill="#fff"/></svg></div><div class="ctitle" style="font-size:48px">Escrow vault</div></div>
+    <div style="margin-top:50px;height:18px;border-radius:9px;background:var(--tint);overflow:hidden"><div id="p_fill" style="height:100%;width:0;border-radius:9px;background:linear-gradient(90deg,#1B47B0,#12378F)"></div></div>
+    <div style="margin-top:40px;display:flex;align-items:baseline;gap:16px"><span style="font-weight:800;font-size:76px;letter-spacing:-0.035em;line-height:1">15 USDC</span><span style="font-size:34px;color:var(--gray);font-weight:500">locked</span></div>
+  </div>
+  <div class="pill" id="p_chip" style="left:660px;top:760px"><svg width="30" height="30" style="color:#12378F"><use href="#chk"/></svg>Verified onchain</div>
+  <div class="pill" id="p_chip2" style="left:1000px;top:760px"><svg width="30" height="30" style="color:#12378F"><use href="#chk"/></svg>Paid on approval</div>
+</div>
+
+<!-- HOW -->
+<div class="scene bg-off" id="s_how">
+  <div class="hex" id="hex_how"></div>
+  <div class="abs cx eyebrow" id="w_eye" style="top:150px">How it works</div>
+  <div class="abs cx" id="w_h" style="top:196px;font-weight:800;font-size:74px;letter-spacing:-0.03em">Four steps. One transaction each.</div>
+  <div id="w_cards"></div>
+  <div class="abs" id="w_line" style="left:160px;top:900px;height:6px;border-radius:3px;background:var(--blue);width:0"></div>
+</div>
+
+<!-- FEATURES -->
+<div class="scene bg-off" id="s_feat">
+  <div class="hex" id="hex_feat"></div>
+  <div id="f_root"></div>
+</div>
+
+<!-- SECURITY -->
+<div class="scene bg-white" id="s_sec">
+  <div class="hex" id="hex_sec"></div>
+  <div class="abs cx eyebrow" id="y_eye" style="top:96px">Security &amp; tech</div>
+  <div class="abs cx" id="y_h" style="top:140px;font-weight:800;font-size:68px;letter-spacing:-0.03em">Trust the code, not the promise.</div>
+  <div id="y_cards"></div>
+</div>
+
+<!-- END -->
+<div class="scene bg-white" id="s_end">
+  <div class="hex" id="hex_end"></div>
+  <div class="abs" id="e_shadow" style="left:760px;top:445px;width:400px;height:60px;border-radius:50%;background:radial-gradient(ellipse at center,rgba(10,10,10,.18),rgba(10,10,10,0) 70%);filter:blur(10px)"></div>
+  <svg class="abs" id="e_logo" width="250" height="278" style="left:835px;top:190px;transform-origin:50% 50%"><use href="#logo"/></svg>
+  <div class="abs cx" id="e_word" style="top:500px;font-weight:800;font-size:88px;line-height:1;letter-spacing:.3em;padding-left:.3em">MUNERA</div>
+  <div class="abs" id="e_under" style="left:810px;top:610px;width:300px;height:6px;border-radius:3px;background:var(--blue);transform-origin:50% 50%"></div>
+  <div class="abs cx" id="e_tag" style="top:650px;font-size:38px;font-weight:550;color:#3A3E48;letter-spacing:-0.005em">Enter the arena. Earn your reward.</div>
+  <div class="pill" id="e_u1" style="left:420px;top:760px;font-size:30px;padding:16px 34px;border:1.5px solid #E6EAF2"><b style="color:var(--blue)">munera-opal.vercel.app</b></div>
+  <div class="pill" id="e_u2" style="left:1010px;top:760px;font-size:30px;padding:16px 34px;border:1.5px solid #E6EAF2">github.com/demir-sama/munera</div>
+  <div class="pill" id="e_u3" style="left:760px;top:850px;font-size:26px;padding:12px 28px;border:1.5px solid #E6EAF2;background:var(--blue);color:#fff">@munera_xyz · Solana devnet</div>
+</div>
+
+</div>
+<div id="ov">
+ <div id="cap"><div id="capin"><div id="capbar"></div><div id="captxt"></div></div></div>
+ <div id="ttl" style="display:none"><div id="ttlnum"></div><div id="ttltxt"></div></div><div id="stat" style="display:none"><div id="statlab"></div><div id="statval"></div><div id="statsub"></div><div id="statbar"><i></i></div></div>
+</div>
+<script src="overlay.js"></script>
+<script src="motion.js"></script>
+</body></html>

@@ -102,3 +102,7 @@ Pushing to `main` auto-deploys through the Vercel Git integration (root director
 Deployed with `anchor deploy --provider.cluster devnet`; mint via `yarn create-mint`; 10,000 test USDC minted to the CLI wallet.
 Demo data was created by `app/scripts/seed-devnet.ts` (the throwaway creator keys live outside the repo in `~/.config/solana/`).
 To give any wallet test USDC: `yarn mint-to <WALLET> 1000` (must be run with the mint-authority keypair).
+
+## Demo video
+
+`assets/munera-demo.mp4` (1920x1080, 30fps, ~2:52, Piper TTS voiceover + burned-in captions) shows the real devnet flow on the live site. Script: `docs/DEMO_VOICEOVER.txt`. Helper scripts (Playwright recorder, ffmpeg post, HTML/SVG motion graphics, TTS) live in `app/scripts/demo/`.
