@@ -17,3 +17,7 @@ scripts/mint-address.json
 # misc
 *.log
 .anchor
+
+# frontend env template is committed
+!.env.example
+!app/.env.example

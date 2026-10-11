@@ -1,0 +1,130 @@
+@import "@solana/wallet-adapter-react-ui/styles.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink: #0a0a0a;
+  --brand: #12378f;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    @apply bg-white text-ink font-sans;
+    background-image: radial-gradient(circle at 1px 1px, rgba(18, 55, 143, 0.07) 1px, transparent 0);
+    background-size: 28px 28px;
+    background-attachment: fixed;
+  }
+  ::selection {
+    background: #c7d7f3;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition
+      focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:ring-offset-2
+      disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply btn bg-brand-600 text-white shadow-sm hover:bg-brand-700 active:bg-brand-800;
+  }
+  .btn-dark {
+    @apply btn bg-ink text-white hover:bg-neutral-800;
+  }
+  .btn-outline {
+    @apply btn border border-neutral-200 bg-white text-ink hover:border-brand-300 hover:bg-brand-50;
+  }
+  .btn-danger {
+    @apply btn border border-red-200 bg-white text-red-700 hover:bg-red-50;
+  }
+  .btn-sm {
+    @apply px-3.5 py-1.5 text-xs rounded-lg;
+  }
+  .card {
+    @apply rounded-2xl border border-neutral-200/80 bg-white shadow-card;
+  }
+  .input {
+    @apply w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm text-ink placeholder:text-neutral-400
+      transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200;
+  }
+  .label {
+    @apply mb-1.5 block text-sm font-semibold text-ink;
+  }
+  .hint {
+    @apply mt-1.5 text-xs text-ink-muted;
+  }
+  .eyebrow {
+    @apply font-display text-xs font-semibold uppercase tracking-[0.28em] text-brand-600;
+  }
+  .rule {
+    @apply h-px w-full bg-gradient-to-r from-transparent via-brand-200 to-transparent;
+  }
+}
+
+/* Wallet adapter button restyled to match the brand */
+.wallet-adapter-button {
+  font-family: inherit !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  height: 40px !important;
+  line-height: 40px !important;
+  padding: 0 18px !important;
+  border-radius: 12px !important;
+  background: #12378f !important;
+  color: #fff !important;
+  transition: background 0.15s ease !important;
+}
+.wallet-adapter-button:not([disabled]):hover {
+  background: #0f2e78 !important;
+}
+.wallet-adapter-button-trigger {
+  background: #12378f !important;
+}
+.wallet-adapter-button-start-icon,
+.wallet-adapter-button-end-icon {
+  margin-right: 8px !important;
+}
+.wallet-adapter-dropdown-list {
+  border-radius: 14px !important;
+  background: #fff !important;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 12px 32px -12px rgba(18, 55, 143, 0.3) !important;
+}
+.wallet-adapter-dropdown-list-item {
+  color: #0a0a0a !important;
+  font-size: 0.85rem !important;
+}
+.wallet-adapter-dropdown-list-item:not([disabled]):hover {
+  background: #f2f6fd !important;
+}
+.wallet-adapter-modal-wrapper {
+  border-radius: 20px !important;
+  background: #fff !important;
+  color: #0a0a0a !important;
+}
+.wallet-adapter-modal-title,
+.wallet-adapter-modal-list .wallet-adapter-button {
+  color: #0a0a0a !important;
+}
+.wallet-adapter-modal-list .wallet-adapter-button {
+  background: #fff !important;
+}
+.wallet-adapter-modal-list .wallet-adapter-button:not([disabled]):hover {
+  background: #f2f6fd !important;
+}
+.wallet-adapter-modal-button-close {
+  background: #f2f6fd !important;
+}
+.wallet-adapter-modal-button-close svg {
+  fill: #0a0a0a !important;
+}
+.wallet-adapter-modal-list-more {
+  color: #12378f !important;
+}
+.wallet-adapter-modal-overlay {
+  background: rgba(10, 10, 10, 0.4) !important;
+}
