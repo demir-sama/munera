@@ -67,6 +67,7 @@ read-only provider when disconnected), `src/lib/pda.ts` (seeds from `lib.rs`), `
 3. Deploy. All routes are client-rendered against the chain, so no server env is needed.
 
 ### Live deployment
+Source: https://github.com/demir-sama/munera (branch `main`).
 Production URL: **https://munera-opal.vercel.app** (Vercel project `munera`, team `sama-5806`, deployment protection off, devnet env vars set).
 The deployment was created from local files (no Git remote is linked), so redeploys are manual until a GitHub repo is connected.
 
