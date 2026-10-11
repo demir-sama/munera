@@ -169,7 +169,7 @@ export function BountyBoard() {
                   role="tab"
                   aria-selected={status === s.v}
                   onClick={() => setParam("status", s.v, "all")}
-                  className={`min-h-[40px] whitespace-nowrap rounded-lg px-4 transition ${
+                  className={`min-h-[44px] whitespace-nowrap rounded-lg px-4 sm:min-h-[40px] transition ${
                     status === s.v ? "bg-brand-600 text-white" : "text-ink-soft hover:bg-brand-50"
                   }`}
                 >

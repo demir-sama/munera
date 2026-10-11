@@ -36,6 +36,7 @@ export function Navbar() {
   }, [open]);
 
   return (
+    <>
     <header className="sticky top-0 z-40 border-b border-neutral-200/70 bg-white/90 pt-safe backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
         <Link href="/" className="flex min-h-[44px] items-center gap-2.5" aria-label="Munera home">
@@ -83,6 +84,7 @@ export function Navbar() {
           </button>
         </div>
       </div>
+    </header>
 
       {open && (
         <div
@@ -120,6 +122,6 @@ export function Navbar() {
           </div>
         </div>
       )}
-    </header>
+    </>
   );
 }

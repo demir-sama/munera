@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useMemo } from "react";
 import { PublicKey } from "@solana/web3.js";
 import { BN } from "@coral-xyz/anchor";
-import { AddressChip } from "./CopyButton";
+import { CopyButton } from "./CopyButton";
 import { EmptyState, ExtLink, Notice, Stat, SubmissionBadge } from "./ui";
 import { useProgram } from "@/hooks/useProgram";
 import { useAsync } from "@/hooks/useAsync";
@@ -80,7 +80,7 @@ function Inner({ creator }: { creator: PublicKey }) {
           <h1 className="break-all font-display text-xl font-bold tracking-wide sm:text-3xl">{shortAddr(creator, 6)}</h1>
           <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-ink-muted">
             <span className="break-all font-mono text-xs">{addr}</span>
-            <AddressChip address={addr} short="Copy" />
+            <CopyButton text={addr} label="Copy address" />
             <ExtLink href={explorerAddress(addr)} className="text-sm">
               Explorer ↗
             </ExtLink>

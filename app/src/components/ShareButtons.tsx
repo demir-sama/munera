@@ -36,7 +36,7 @@ export function ShareButtons({
           rel="noopener noreferrer"
           aria-label="Share on X"
           title="Share on X"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-ink-soft transition hover:bg-ink hover:text-white"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-xl sm:h-10 sm:w-10 text-ink-soft transition hover:bg-ink hover:text-white"
         >
           <XIcon className="h-4 w-4" />
         </a>
@@ -45,7 +45,7 @@ export function ShareButtons({
           onClick={copy}
           aria-label="Copy link"
           title="Copy link"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-ink-soft transition hover:bg-brand-50 hover:text-brand-700"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-xl sm:h-10 sm:w-10 text-ink-soft transition hover:bg-brand-50 hover:text-brand-700"
         >
           {done ? <CheckIcon className="h-4 w-4 text-brand-600" /> : <CopyIcon />}
         </button>

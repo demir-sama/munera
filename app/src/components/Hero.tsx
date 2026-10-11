@@ -20,17 +20,17 @@ export function Hero() {
             Sponsors lock USDC in a vault. Creators submit their best work. One approval pays the victor straight from the vault —
             every payout public, every coin traceable on Solana.
           </p>
-          <div className="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap">
-            <Link href="#arena" className="btn-primary px-6 py-3">
+          <div className="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap sm:gap-2.5">
+            <Link href="#arena" className="btn-primary px-5 py-3">
               Browse bounties
             </Link>
-            <Link href="/create" className="btn-dark px-6 py-3">
+            <Link href="/create" className="btn-dark px-5 py-3">
               Launch a bounty
             </Link>
-            <Link href="/payments" className="btn-outline px-6 py-3">
+            <Link href="/payments" className="btn-outline px-5 py-3">
               See payouts
             </Link>
-            <a href={X_URL} target="_blank" rel="noopener noreferrer" className="btn-outline px-6 py-3">
+            <a href={X_URL} target="_blank" rel="noopener noreferrer" className="btn-outline px-5 py-3">
               <XIcon className="h-4 w-4" /> Follow on X
             </a>
           </div>
