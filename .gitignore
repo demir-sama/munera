@@ -1,0 +1,19 @@
+.anchor
+.DS_Store
+target
+**/*.rs.bk
+node_modules
+test-ledger
+.yarn
+
+# keypairs / secrets
+*-keypair.json
+*.keypair.json
+id.json
+.env
+.env.*
+scripts/mint-address.json
+
+# misc
+*.log
+.anchor
