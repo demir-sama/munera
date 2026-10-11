@@ -7,6 +7,9 @@ import { PublicKey } from "@solana/web3.js";
 import { getAssociatedTokenAddressSync } from "@solana/spl-token";
 import { BountyBadge, ExtLink, Notice, Spinner, Stat, SubmissionBadge, EmptyState } from "./ui";
 import { WalletButton } from "./WalletButton";
+import { ShareButtons } from "./ShareButtons";
+import { MobileWalletHelp } from "./MobileWalletHelp";
+import { AddressChip } from "./CopyButton";
 import { useToast } from "./Toast";
 import { useProgram } from "@/hooks/useProgram";
 import { useAsync } from "@/hooks/useAsync";
@@ -167,30 +170,34 @@ function Inner({ bountyKey }: { bountyKey: PublicKey }) {
 
   return (
     <div className="space-y-8">
-      <Link href="/" className="inline-flex items-center gap-1 text-sm font-semibold text-ink-soft hover:text-brand-600">
+      <Link href="/" className="inline-flex min-h-[44px] items-center gap-1 text-sm font-semibold text-ink-soft hover:text-brand-600">
         ← All bounties
       </Link>
 
       {/* Header card */}
       <section className="card overflow-hidden">
-        <div className="border-b border-neutral-100 bg-gradient-to-br from-brand-50 to-white p-6 sm:p-8">
+        <div className="border-b border-neutral-100 bg-gradient-to-br from-brand-50 to-white p-5 sm:p-8">
           <div className="flex flex-wrap items-center gap-3">
             <BountyBadge state={state} />
             {isSponsor && <span className="rounded-full bg-ink px-2.5 py-1 text-xs font-semibold text-white">You are the sponsor</span>}
           </div>
-          <h1 className="mt-3 font-display text-3xl font-bold leading-tight tracking-wide sm:text-4xl">{bounty.title}</h1>
+          <h1 className="mt-3 break-words font-display text-2xl font-bold leading-tight tracking-wide sm:text-4xl">{bounty.title}</h1>
           <p className="mt-3 max-w-3xl whitespace-pre-wrap text-ink-soft">{bounty.description || "No description provided."}</p>
-          <p className="mt-4 text-sm text-ink-muted">
-            Sponsored by <ExtLink href={explorerAddress(bounty.sponsor.toBase58())}>{shortAddr(bounty.sponsor)}</ExtLink>
-            {" · "}
-            <ExtLink href={explorerAddress(bounty.address.toBase58())}>Bounty account ↗</ExtLink>
-            {" · "}
-            <Link href={`/payments?bounty=${bounty.address.toBase58()}`} className="font-semibold text-brand-600 hover:underline">
+          <p className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink-muted">
+            <span className="inline-flex items-center">
+              Sponsored by&nbsp;
+              <AddressChip address={bounty.sponsor.toBase58()} short={shortAddr(bounty.sponsor)} href={explorerAddress(bounty.sponsor.toBase58())} />
+            </span>
+            <ExtLink href={explorerAddress(bounty.address.toBase58())} className="py-2">Bounty account ↗</ExtLink>
+            <Link href={`/payments?bounty=${bounty.address.toBase58()}`} className="py-2 font-semibold text-brand-600 hover:underline">
               Payments →
             </Link>
           </p>
+          <div className="mt-4">
+            <ShareButtons address={bounty.address.toBase58()} title={bounty.title} reward={formatUnits(bounty.rewardPerWinner)} />
+          </div>
         </div>
-        <div className="grid grid-cols-2 gap-4 p-6 sm:p-8 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 p-4 sm:gap-4 sm:p-8 lg:grid-cols-4">
           <Stat label="Reward per winner" value={`${formatUnits(bounty.rewardPerWinner)} ${TOKEN_SYMBOL}`} />
           <Stat label="Slots left" value={`${left} / ${bounty.maxWinners}`} sub={`${bounty.paidCount} paid`} />
           <Stat
@@ -204,7 +211,7 @@ function Inner({ bountyKey }: { bountyKey: PublicKey }) {
             sub={formatDate(deadline)}
           />
         </div>
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-neutral-100 px-6 py-4 text-sm text-ink-muted sm:px-8">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-neutral-100 px-5 py-3 text-sm text-ink-muted sm:px-8">
           <span>
             Vault: <ExtLink href={explorerAddress(vaultPda(bounty.address, program.programId).toBase58())}>{shortAddr(vaultPda(bounty.address, program.programId))} ↗</ExtLink>
           </span>
@@ -216,7 +223,7 @@ function Inner({ bountyKey }: { bountyKey: PublicKey }) {
 
       {/* Sponsor reclaim */}
       {isSponsor && !closed && (
-        <section className="card flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
+        <section className="card flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
           <div>
             <h2 className="font-display text-lg font-bold">Reclaim unspent funds</h2>
             <p className="mt-1 text-sm text-ink-soft">
@@ -225,7 +232,7 @@ function Inner({ bountyKey }: { bountyKey: PublicKey }) {
                 : `Available after the deadline (${formatDate(deadline)}).`}
             </p>
           </div>
-          <button className="btn-dark shrink-0" disabled={!canReclaim || pending !== null} onClick={reclaim}>
+          <button className="btn-dark w-full shrink-0 sm:w-auto" disabled={!canReclaim || pending !== null} onClick={reclaim}>
             {pending === "reclaim" ? <Spinner /> : null} Reclaim unspent
           </button>
         </section>
@@ -267,8 +274,8 @@ function Inner({ bountyKey }: { bountyKey: PublicKey }) {
       )}
 
       {/* Submissions */}
-      <section>
-        <div className="mb-4 flex items-end justify-between">
+      <section id="submissions" className="scroll-mt-24">
+        <div className="mb-4 flex items-end justify-between gap-3">
           <div>
             <p className="eyebrow mb-1.5">The contenders</p>
             <h2 className="font-display text-2xl font-bold tracking-wide">Submissions</h2>
@@ -317,7 +324,7 @@ function SubmitSection({
   const [touched, setTouched] = useState(false);
   const err = validateLink(link);
   return (
-    <section className="card p-6 sm:p-8">
+    <section className="card p-5 sm:p-8">
       <h2 className="font-display text-xl font-bold tracking-wide">Enter the arena</h2>
       <p className="mt-1 text-sm text-ink-soft">Submit a link to your work (post, video, clip). One entry per creator.</p>
       {reason ? (
@@ -325,9 +332,12 @@ function SubmitSection({
           <Notice tone="info">{reason}</Notice>
         </div>
       ) : !connected ? (
-        <div className="mt-4 flex flex-wrap items-center gap-3">
-          <WalletButton />
-          <span className="text-sm text-ink-muted">Connect a wallet to submit.</span>
+        <div className="mt-4 space-y-3">
+          <div className="flex flex-wrap items-center gap-3">
+            <WalletButton />
+            <span className="text-sm text-ink-muted">Connect a wallet to submit.</span>
+          </div>
+          <MobileWalletHelp />
         </div>
       ) : (
         <form
@@ -352,7 +362,7 @@ function SubmitSection({
               placeholder="https://x.com/you/status/123…"
               disabled={!canSubmit || busy}
             />
-            <button className="btn-primary shrink-0" disabled={!canSubmit || busy}>
+            <button className="btn-primary w-full shrink-0 sm:w-auto" disabled={!canSubmit || busy}>
               {busy ? <Spinner /> : null} Submit entry
             </button>
           </div>
@@ -405,13 +415,13 @@ function SubmissionRow({
   const busy = pending === `approve:${k}` || pending === `reject:${k}`;
   const safeHref = /^https?:\/\//i.test(s.link) ? s.link : undefined;
   return (
-    <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+    <div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-6">
       <div className="min-w-0 space-y-1.5">
         <div className="flex flex-wrap items-center gap-2.5">
           <SubmissionBadge state={st} />
-          <ExtLink href={explorerAddress(s.creator.toBase58())} className="font-mono text-sm">
+          <Link href={`/creator/${s.creator.toBase58()}`} className="font-mono text-sm font-semibold text-brand-600 hover:underline">
             {shortAddr(s.creator)}
-          </ExtLink>
+          </Link>
           {isMine && <span className="rounded-full bg-brand-50 px-2 py-0.5 text-xs font-semibold text-brand-700">You</span>}
         </div>
         {safeHref ? (
@@ -432,7 +442,7 @@ function SubmissionRow({
         )}
       </div>
       {isSponsor && st === "pending" && (
-        <div className="flex shrink-0 gap-2">
+        <div className="grid shrink-0 grid-cols-2 gap-2 sm:flex">
           <button className="btn-primary btn-sm" disabled={pending !== null || !canPay} onClick={onApprove} title={!canPay ? "No winner slots left" : undefined}>
             {pending === `approve:${k}` && <Spinner />} Approve & pay
           </button>

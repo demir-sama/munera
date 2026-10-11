@@ -2,6 +2,7 @@
  * Onchain data access. Framework-free (no React) so it can be reused from node scripts.
  */
 import type { IdlAccounts } from "@coral-xyz/anchor";
+import { BN } from "@coral-xyz/anchor";
 import { Connection, PublicKey } from "@solana/web3.js";
 import type { Munera } from "../idl/munera";
 import type { MuneraProgram } from "./program";
@@ -98,4 +99,76 @@ export async function findPayoutSignature(connection: Connection, submission: Pu
   const sig = ok?.signature ?? null;
   if (sig) sigCache.set(key, sig);
   return sig;
+}
+
+/** Submissions by one creator (memcmp on `creator`: 8-byte discriminator + 32-byte bounty pubkey). */
+export async function fetchSubmissionsByCreator(program: MuneraProgram, creator: PublicKey): Promise<Submission[]> {
+  const all = await program.account.submission.all([{ memcmp: { offset: 40, bytes: creator.toBase58() } }]);
+  return all.map(withAddr).sort((a, b) => stateRank(a) - stateRank(b));
+}
+
+// ---------------------------------------------------------------------------
+// Aggregates (leaderboard / platform stats) - computed client-side from account data
+// ---------------------------------------------------------------------------
+
+export type CreatorStat = {
+  creator: PublicKey;
+  earned: BN;
+  approved: number;
+  pending: number;
+  rejected: number;
+  bountiesWon: number;
+};
+
+export function computeCreatorStats(subs: Submission[]): CreatorStat[] {
+  const m = new Map<string, CreatorStat & { won: Set<string> }>();
+  for (const s of subs) {
+    const k = s.creator.toBase58();
+    let e = m.get(k);
+    if (!e) {
+      e = { creator: s.creator, earned: new BN(0), approved: 0, pending: 0, rejected: 0, bountiesWon: 0, won: new Set() };
+      m.set(k, e);
+    }
+    const st = submissionState(s);
+    if (st === "approved") {
+      e.earned = e.earned.add(s.paidAmount);
+      e.approved++;
+      e.won.add(s.bounty.toBase58());
+    } else if (st === "pending") e.pending++;
+    else e.rejected++;
+  }
+  return [...m.values()].map(({ won, ...rest }) => ({ ...rest, bountiesWon: won.size }));
+}
+
+/** Creators ranked by USDC earned (only creators with at least one approved clip), ties broken by clip count. */
+export function computeLeaderboard(subs: Submission[]): CreatorStat[] {
+  return computeCreatorStats(subs)
+    .filter((c) => c.approved > 0)
+    .sort((a, b) => b.earned.cmp(a.earned) || b.approved - a.approved || a.creator.toBase58().localeCompare(b.creator.toBase58()));
+}
+
+export type PlatformStats = { bounties: number; open: number; escrowed: BN; paid: BN; payouts: number; creators: number };
+
+export function computePlatformStats(bounties: Bounty[], subs: Submission[], nowSec: number): PlatformStats {
+  let escrowed = new BN(0);
+  let paid = new BN(0);
+  let payouts = 0;
+  for (const b of bounties) {
+    paid = paid.add(b.rewardPerWinner.muln(b.paidCount));
+    payouts += b.paidCount;
+    if (!bountyIsClosed(b)) escrowed = escrowed.add(b.rewardPerWinner.muln(slotsLeft(b)));
+  }
+  return {
+    bounties: bounties.length,
+    open: bounties.filter((b) => bountyState(b, nowSec) === "open").length,
+    escrowed,
+    paid,
+    payouts,
+    creators: new Set(subs.map((s) => s.creator.toBase58())).size,
+  };
+}
+
+export async function fetchLeaderboardData(program: MuneraProgram) {
+  const [bounties, subs] = await Promise.all([fetchBounties(program), fetchAllSubmissions(program)]);
+  return { bounties, subs };
 }

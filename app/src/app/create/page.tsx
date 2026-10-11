@@ -7,6 +7,7 @@ import { BN } from "@coral-xyz/anchor";
 import { getAssociatedTokenAddressSync } from "@solana/spl-token";
 import { PageHeader, Notice, Spinner, ExtLink } from "@/components/ui";
 import { WalletButton } from "@/components/WalletButton";
+import { MobileWalletHelp } from "@/components/MobileWalletHelp";
 import { useToast } from "@/components/Toast";
 import { useProgram } from "@/hooks/useProgram";
 import { USDC_MINT, USDC_MINT_RAW, TOKEN_SYMBOL, MAX_DESCRIPTION_LEN, MAX_TITLE_LEN, USDC_DECIMALS } from "@/lib/config";
@@ -146,7 +147,7 @@ export default function CreatePage() {
         </div>
       )}
 
-      <form onSubmit={onSubmit} className="card space-y-6 p-6 sm:p-8" noValidate>
+      <form onSubmit={onSubmit} className="card space-y-6 p-5 sm:p-8" noValidate>
         <div>
           <label className="label" htmlFor="title">Title</label>
           <input id="title" className="input" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Best 30s clip of the new release" />
@@ -207,7 +208,7 @@ export default function CreatePage() {
         {noUsdc && USDC_MINT && (
           <Notice tone="warn" title={`This wallet has no ${TOKEN_SYMBOL} yet`}>
             <p>Mint some devnet test USDC to this wallet from the repo root, then refresh your balance:</p>
-            <pre className="mt-2 overflow-x-auto rounded-lg bg-white/80 p-3 text-xs text-ink">yarn mint-to {publicKey!.toBase58()} 1000</pre>
+            <pre className="mt-2 max-w-full overflow-x-auto whitespace-pre-wrap break-all rounded-lg bg-white/80 p-3 text-xs text-ink">yarn mint-to {publicKey!.toBase58()} 1000</pre>
             <div className="mt-3 flex flex-wrap gap-2">
               <button type="button" onClick={copyAddr} className="btn-outline btn-sm">
                 {copied ? "Copied ✓" : "Copy wallet address"}
@@ -226,6 +227,7 @@ export default function CreatePage() {
           <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-brand-200 p-6 text-center">
             <p className="text-sm text-ink-soft">Connect a wallet to fund and publish your bounty.</p>
             <WalletButton />
+            <MobileWalletHelp className="w-full text-left" />
           </div>
         ) : (
           <button type="submit" className="btn-primary w-full py-3 text-base" disabled={busy || !USDC_MINT || (touched && hasErrors)}>

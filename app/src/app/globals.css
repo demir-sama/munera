@@ -11,6 +11,59 @@
 @layer base {
   html {
     -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%;
+    overflow-x: hidden;
+  }
+  body {
+    overflow-x: hidden;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  /* Android Chrome renders datetime-local with intrinsic width and its own chrome; normalise it */
+  input[type="datetime-local"],
+  input[type="date"],
+  input[type="time"] {
+    -webkit-appearance: none;
+    appearance: none;
+    display: block;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    min-height: 44px;
+    line-height: 1.4;
+  }
+  input[type="datetime-local"]::-webkit-date-and-time-value {
+    text-align: left;
+    min-height: 1.4em;
+  }
+  select.input {
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 38px;
+  }
+  textarea {
+    font-size: 16px;
+  }
+  @media (min-width: 640px) {
+    textarea {
+      font-size: 0.875rem;
+    }
+  }
+  summary {
+    -webkit-tap-highlight-color: transparent;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
   }
   body {
     @apply bg-white text-ink font-sans;
@@ -25,7 +78,7 @@
 
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition
       focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:ring-offset-2
       disabled:cursor-not-allowed disabled:opacity-50;
   }
@@ -42,13 +95,13 @@
     @apply btn border border-red-200 bg-white text-red-700 hover:bg-red-50;
   }
   .btn-sm {
-    @apply px-3.5 py-1.5 text-xs rounded-lg;
+    @apply min-h-[44px] rounded-lg px-4 py-2 text-sm sm:min-h-[36px] sm:px-3.5 sm:py-1.5 sm:text-xs;
   }
   .card {
     @apply rounded-2xl border border-neutral-200/80 bg-white shadow-card;
   }
   .input {
-    @apply w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm text-ink placeholder:text-neutral-400
+    @apply min-h-[44px] w-full min-w-0 max-w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-base text-ink sm:text-sm placeholder:text-neutral-400
       transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200;
   }
   .label {
@@ -60,6 +113,12 @@
   .eyebrow {
     @apply font-display text-xs font-semibold uppercase tracking-[0.28em] text-brand-600;
   }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
   .rule {
     @apply h-px w-full bg-gradient-to-r from-transparent via-brand-200 to-transparent;
   }
@@ -70,8 +129,9 @@
   font-family: inherit !important;
   font-size: 0.875rem !important;
   font-weight: 600 !important;
-  height: 40px !important;
-  line-height: 40px !important;
+  height: 44px !important;
+  line-height: 44px !important;
+  max-width: 100%;
   padding: 0 18px !important;
   border-radius: 12px !important;
   background: #12378f !important;
@@ -124,6 +184,13 @@
 }
 .wallet-adapter-modal-list-more {
   color: #12378f !important;
+}
+.wallet-adapter-modal-wrapper {
+  max-width: calc(100vw - 24px) !important;
+  max-height: calc(100dvh - 24px) !important;
+}
+.wallet-adapter-modal-list .wallet-adapter-button {
+  min-height: 52px;
 }
 .wallet-adapter-modal-overlay {
   background: rgba(10, 10, 10, 0.4) !important;
