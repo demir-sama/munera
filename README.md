@@ -106,3 +106,5 @@ To give any wallet test USDC: `yarn mint-to <WALLET> 1000` (must be run with the
 ## Demo video
 
 `assets/munera-demo.mp4` (1920x1080, 30fps, ~2:52, Piper TTS voiceover + burned-in captions) shows the real devnet flow on the live site. Script: `docs/DEMO_VOICEOVER.txt`. Helper scripts (Playwright recorder, ffmpeg post, HTML/SVG motion graphics, TTS) live in `app/scripts/demo/`.
+
+**v2 audio:** `assets/munera-demo-v2.mp4` – same video with a more natural neural voiceover (edge-tts en-US-AndrewMultilingualNeural), CC0 sound effects (Kenney + synthesized), no music bed. Audio build scripts and license notes: `app/scripts/demo/audio/` (`SFX_CREDITS.md`).

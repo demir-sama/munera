@@ -1,5 +1,5 @@
 MUNERA DEMO - VOICEOVER / CAPTION SCRIPT (~2:50, all lines are burned in as captions and narrated)
-Narration: Piper TTS (en_US-ryan-high), offline. Source of truth: app/scripts/demo/lines.json
+Narration (v2): edge-tts neural voice en-US-AndrewMultilingualNeural (rate -6%, -16 LUFS), with CC0 sound effects. v1 (munera-demo.mp4) used Piper en_US-ryan-high. Source of truth: app/scripts/demo/lines.json; build: app/scripts/demo/audio/
 
 [INTRO (0:00)]
   Munera. Enter the arena. Earn your reward.
